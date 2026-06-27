@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>FastAPI Frontend</title>
+    <style>
+      body {
+        font-family: Arial;
+        margin: 40px;
+        background: #f4f4f4;
+      }
+      h2 {
+        margin-top: 30px;
+      }
+      input,
+      button {
+        padding: 8px;
+        margin: 5px;
+      }
+      .box {
+        background: white;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🚀 FastAPI Frontend</h1>
+
+    <!-- USERS -->
+    <div class="box">
+      <h2>👤 Users</h2>
+      <input id="uname" placeholder="Name" />
+      <input id="uemail" placeholder="Email" />
+      <input id="upass" placeholder="Password" />
+      <button onclick="createUser()">Add User</button>
+      <button onclick="getUsers()">Show Users</button>
+      <pre id="users"></pre>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="box">
+      <h2>📦 Products</h2>
+      <input id="pname" placeholder="Name" />
+      <input id="pdesc" placeholder="Description" />
+      <input id="pprice" placeholder="Price" />
+      <input id="pstock" placeholder="Stock" />
+      <button onclick="createProduct()">Add Product</button>
+      <button onclick="getProducts()">Show Products</button>
+      <pre id="products"></pre>
+    </div>
+
+    <!-- NOTES -->
+    <div class="box">
+      <h2>📝 Notes</h2>
+      <input id="nuser" placeholder="User ID" />
+      <input id="ncontent" placeholder="Content" />
+      <button onclick="createNote()">Add Note</button>
+      <button onclick="getNotes()">Show Notes</button>
+      <pre id="notes"></pre>
+    </div>
+
+    <script>
+      const API = "http://127.0.0.1:8000";
+
+      // USERS
+      async function createUser() {
+        const data = {
+          name: document.getElementById("uname").value,
+          email: document.getElementById("uemail").value,
+          password: document.getElementById("upass").value,
+        };
+
+        await fetch(`${API}/users/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        getUsers();
+      }
+
+      async function getUsers() {
+        const res = await fetch(`${API}/users/`);
+        const data = await res.json();
+        document.getElementById("users").innerText = JSON.stringify(
+          data,
+          null,
+          2,
+        );
+      }
+
+      // PRODUCTS
+      async function createProduct() {
+        const data = {
+          name: document.getElementById("pname").value,
+          description: document.getElementById("pdesc").value,
+          price: parseFloat(document.getElementById("pprice").value),
+          stock: parseInt(document.getElementById("pstock").value),
+        };
+
+        await fetch(`${API}/products/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        getProducts();
+      }
+
+      async function getProducts() {
+        const res = await fetch(`${API}/products/`);
+        const data = await res.json();
+        document.getElementById("products").innerText = JSON.stringify(
+          data,
+          null,
+          2,
+        );
+      }
+
+      // NOTES
+      async function createNote() {
+        const data = {
+          user_id: parseInt(document.getElementById("nuser").value),
+          content: document.getElementById("ncontent").value,
+        };
+
+        await fetch(`${API}/notes/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        getNotes();
+      }
+
+      async function getNotes() {
+        const res = await fetch(`${API}/notes/`);
+        const data = await res.json();
+        document.getElementById("notes").innerText = JSON.stringify(
+          data,
+          null,
+          2,
+        );
+      }
+    </script>
+  </body>
+</html>
